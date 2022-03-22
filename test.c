@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/19 18:44:48 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/22 00:53:30 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/03/22 21:27:36 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,20 +191,55 @@ char	*check_path(char **line, char *cmd)
 
 int main(int argc, char **argv, char **env)
 {
-	int	pid = fork();
-	int fd1 = open(argv[1], O_RDONLY);
-	int fd2 = open(argv[4], O_WRONLY);
-	int i = 0;
-	int	p[2];
+	int		pid;
+	int 	fd1 = open(argv[1], O_RDONLY);
+	int 	fd2 = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	int 	i = 0;
+	int		p[2];
+	char	buffer[1];
+	int		buffer_len;
+	char	**arr1;
 
 	if (pipe(p) < 0)
 		exit(1);
-	dup2(p[0], fd1);
 	char **line = berhouch_khames(env, argv[2]);
 	char *path = check_path(line, argv[2]);
+	pid = fork();
+	if (pid == -1)
+		return (0);
 	if (pid == 0)
-		execve(path, ++argv, env);
-	p[0] = dup(fd1);
-	dup2(fd2, p[1]);
+	{
+		dup2(fd1, 0);
+		dup2(p[1], 1);
+		close(p[1]);
+		arr1 = ft_split(argv[2], ' ');
+		execve(path, arr1, env);
+	}
+	waitpid(0, NULL, 0);
+	pid = fork();
+	if (pid == -1)
+		return (0);
+	char **arr2 = ft_split(argv[3], ' ');
+	line = berhouch_khames(env, arr2[0]);
+	path = check_path(line, arr2[0]);
+	
+	if (pid == 0)
+	{
+		dup2(fd2, 1);
+		dup2(p[0], 0);
+		// buffer_len = 1;
+		// while (buffer_len)
+		// {
+		// buffer_len = read (p[0], buffer, 100000);
+		// printf ("%s", buffer);
+			
+		// }
+		close(p[0]);
+		// printf("ay haja\n");
+		execve(path, arr2, env);
+		printf("rip\n");
+	}
+	waitpid(pid,NULL,0);
 	printf("chi haja\n");
+	return (0);
 }

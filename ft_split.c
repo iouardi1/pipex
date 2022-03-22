@@ -6,11 +6,14 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/13 16:25:25 by iouardi           #+#    #+#             */
-/*   Updated: 2021/11/16 22:06:06 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/03/22 16:00:31 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
 
 int	count_words(char const *s, char c)
 {

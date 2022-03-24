@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 17:26:07 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/23 17:17:30 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/03/24 00:38:08 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,3 @@ char	*ft_strnstr(const char *str1, const char *str2, size_t len)
 	}
 	return (NULL);
 }
-
-// int main()
-// {
-// 	char *paths = "PATH=/Users/iouardi/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki";
-// 	printf("%s", ft_strnstr(paths, "PATH=", 5));
-// }

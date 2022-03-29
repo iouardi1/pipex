@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:31 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/24 01:11:19 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/03/29 00:27:20 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@
 typedef struct s_pipexa
 {
 	char	*path;
-	char	**cmd1;
-	char	**cmd2;
+	char	**cmd;
 	int		p[2];
 }	t_pipexa;
 

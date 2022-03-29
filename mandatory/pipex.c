@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:01 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/24 01:25:27 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/03/28 23:33:35 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	execute_cmd2(t_pipexa piipe, char *argv, char **env)
 void	close_n_wait(t_pipexa piipe, int pid1, int pid2)
 {
 	close(piipe.p[0]);
-	close(piipe.p[1]);
+	close(piipe.p[1]);  
 	waitpid(pid1, NULL, 0);
 	waitpid(pid2, NULL, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:01 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/24 01:16:04 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/03/29 03:08:52 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,80 +25,85 @@ void	ft_free(char **arr)
 	free (arr);
 }
 
-int	execute_cmd1(t_pipexa piipe, char *argv, char **env)
+int	execute_cmd(t_pipexa piipe, char *argv, char **env, int i)
 {
-	int		pid;
-	int		pid1;
-	int		fd1;
+	int	pid;
 
-	fd1 = open(argv, O_RDONLY, 0666);
+	piipe.cmd = ft_split(argv, ' ');
+	piipe.path = find_path(piipe.cmd[0], env);
 	pid = fork();
 	if (pid == -1)
 		return (2);
+	if (pipe(piipe.p) == -1)
+			return (2);
 	if (pid == 0)
 	{
-		pid1 = pid;
-		dup2(fd1, 0);
+		printf("%d\n", i);
+		if (i > 2)
+			dup2(piipe.p[0], 0);
 		dup2(piipe.p[1], 1);
-		close (piipe.p[0]);
-		execve(piipe.path, piipe.cmd1, env);
+		// close(piipe.p[0]);
+		// close(piipe.p[1]);
+		execve(piipe.path, piipe.cmd, env);
 	}
 	return (pid);
 }
 
-int	execute_cmd2(t_pipexa piipe, char *argv, char **env)
+void	close_n_wait(t_pipexa piipe, int *pid)
 {
-	int		pid;
-	int		fd2;
-
-	fd2 = open(argv, O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	pid = fork();
-	if (pid == -1)
-		return (2);
-	if (pid == 0)
-	{
-		dup2(piipe.p[0], 0);
-		dup2(fd2, 1);
-		close (piipe.p[1]);
-		close (piipe.p[0]);
-		execve(piipe.path, piipe.cmd2, env);
-	}
-	return (pid);
-}
-
-void	close_n_wait(t_pipexa piipe, int pid1, int pid2)
-{
+	int		i = 0;
 	close(piipe.p[0]);
 	close(piipe.p[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	while (pid[i])
+	{	
+		waitpid(pid[i], NULL, 0);
+		i++;
+	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_pipexa	piipe;
-	char		*path_temp;
-	int			pid1;
-	int			pid2;
+	int			pid[argc - 3];
+	int			fd1 = open (argv[1], O_RDONLY, 0666);
+	int			fd2 = open (argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	int			i = 2;
+	int			j = 0;
 
-	if (argc == 5)
+	piipe.path = NULL;
+	if (argc >= 5)
 	{
-		piipe.cmd1 = ft_split(argv[2], ' ');
-		piipe.cmd2 = ft_split(argv[3], ' ');
-		piipe.path = find_path (piipe.cmd1[0], env);
-		path_temp = piipe.path;
-		if (pipe(piipe.p) == -1)
-			return (2);
-		pid1 = execute_cmd1(piipe, argv[1], env);
-		free (path_temp);
-		if (pid1 == 2)
-			write(2, "pipe failed my dear :(\n", 24);
-		piipe.path = find_path (piipe.cmd2[0], env);
-		pid2 = execute_cmd2(piipe, argv[4], env);
-		if (pid2 == 2)
-			write(2, "pipe failed my dear :(\n", 24);
-		close_n_wait(piipe, pid1, pid2);
+		// pid[j] = fork();
+		// if (pid[j] == -1)
+		// 	return (2);
+		// if (pid[j] == 0)
+		// {
+		// 	if (pipe(piipe.p) )
+		// 	piipe.cmd = ft_split(argv[i], ' ');
+		// 	piipe.path = find_path(piipe.cmd[0], env);
+		// 	dup2(fd1, 0);
+		// 	dup2(piipe.p[1], 1);
+		// 	execve(piipe.path, piipe.cmd, env);
+		// }
+		dup2(fd1, 0);
+		while (argv[i + 2])
+		{
+			pid[j++] = execute_cmd(piipe, argv[i], env, i);
+			i++;
+		}
+		pid[j] = fork();
+		if (pid[j] == -1)
+			return 2;
+		dup2(piipe.p[0], 0);
+		if (pid[j] == 0)
+		{
+			piipe.cmd = ft_split(argv[i], ' ');
+			piipe.path = find_path(piipe.cmd[0], env);
+			dup2(fd2, 1);
+			execve(piipe.path, piipe.cmd, env);
+		}
+		// close_n_wait(piipe, pid);
 	}
 	else
-		write(2, "please insert two commmands\n", 29);
+		write(2, "please insert at least two commmands\n", 29);
 }

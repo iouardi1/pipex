@@ -6,7 +6,7 @@
 #    By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/14 16:41:34 by iouardi           #+#    #+#              #
-#    Updated: 2022/03/24 01:34:29 by iouardi          ###   ########.fr        #
+#    Updated: 2022/04/01 21:34:54 by iouardi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,9 @@ CC=                cc
 SRC_FILES = mandatory/pipex.c \
 			mandatory/find_path.c
 SRC_FILES_BONUS = bonus/pipex_bonus.c \
-				bonus/find_path_bonus.c
+				bonus/find_path_bonus.c \
+				bonus/get_next_line.c \
+				bonus/get_next_line_utils.c
 OBJ_FILES=			$(SRC_FILES:.c=.o)
 OBJ_FILES_BONUS=	$(SRC_FILES_BONUS:.c=.o)
 

@@ -6,45 +6,34 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:01 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/29 03:08:52 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/02 01:24:25 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	ft_free(char **arr)
+int	execute_cmd(t_pipexa piipe, char *argv, char **env)
 {
-	int		i;
+	int		pid;
 
-	i = 0;
-	while (arr[i])
-	{
-		free (arr[i]);
-		i++;
-	}
-	free (arr);
-}
-
-int	execute_cmd(t_pipexa piipe, char *argv, char **env, int i)
-{
-	int	pid;
-
-	piipe.cmd = ft_split(argv, ' ');
-	piipe.path = find_path(piipe.cmd[0], env);
+	if (pipe(piipe.p) == -1)
+		write(2, "Pipe Error ", 12);
 	pid = fork();
 	if (pid == -1)
-		return (2);
-	if (pipe(piipe.p) == -1)
-			return (2);
+		write(2, "Fork Error ", 12);
 	if (pid == 0)
 	{
-		printf("%d\n", i);
-		if (i > 2)
-			dup2(piipe.p[0], 0);
-		dup2(piipe.p[1], 1);
-		// close(piipe.p[0]);
-		// close(piipe.p[1]);
-		execve(piipe.path, piipe.cmd, env);
+		close(piipe.p[0]);
+		dup2(piipe.p[1], STDOUT_FILENO);
+		piipe.cmd = ft_split(argv, ' ');
+		piipe.path = find_path(piipe.cmd[0], env);
+		if (!piipe.path || execve(piipe.path, ft_split(argv, ' '), env) == -1)
+			write(2, "command not found\n", 19);
+	}
+	else
+	{
+		close(piipe.p[1]);
+		dup2(piipe.p[0], STDIN_FILENO); 
 	}
 	return (pid);
 }
@@ -61,49 +50,121 @@ void	close_n_wait(t_pipexa piipe, int *pid)
 	}
 }
 
+void	check_fd(int fd)
+{
+	if (fd == -1)
+	{
+		write(2, "no such file or directory\n", 27);
+		exit(0);
+	}
+}
+
+int	check_here_doc(char *argv)
+{
+	int		i;
+	i = ft_strlen("here_doc");
+	if (!ft_strncmp(argv, "here_doc", i))
+		return (1);
+	return (0);
+}
+
+int	out_process(t_pipexa piipe, char **argv, int argc, char **env)
+{
+	int		fd;
+	char	*path_temp;
+	int		pid;
+
+	piipe.cmd = ft_split(argv[argc - 2], ' ');
+	fd = 0;
+	piipe.path = find_path(piipe.cmd[0], env);
+	path_temp = piipe.path;
+	if (!piipe.path)
+	{
+		write(2, "Command not found\n", 19);
+		return (2);
+	}
+	if (check_here_doc(argv[1]))
+		fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+	else
+		fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	check_fd(fd);
+	pid = fork();
+	if (pid == -1)
+		write (2, "fork failed\n", 13);
+	if (pid == 0)
+	{
+		dup2(fd, STDOUT_FILENO);
+		execve(piipe.path, piipe.cmd, env);
+		free(path_temp);
+		// write(2, "Execve Error command failed\n", 29);
+		// write(2, "Execve Error command failed\n", 29);
+
+	}
+	return (pid);
+}
+
+void	type_line_n_check_argv(t_pipexa piipe, char *line, char *argv, int len)
+{
+	while (1)
+	{
+		line = get_next_line(0);
+		if (!ft_strncmp(line, argv, len) && line[len] == '\n')
+			exit(0);
+		write(piipe.p[1], line, ft_strlen(line));
+	}
+}
+
+void	for_my_dear_here_doc(char *argv, t_pipexa piipe)
+{
+	int		pid;
+	char	*line;
+	int		len;
+	
+	if (pipe(piipe.p) == -1)
+		write(2, "pipe error honey\n", 18);
+	pid = fork();
+	line = NULL;
+	if (pid == -1)
+		write(2, "fork error\n", 12);
+	if (pid == 0)
+	{
+		len = ft_strlen(argv);
+		type_line_n_check_argv(piipe, line, argv, len);
+	}
+	else
+	{
+		dup2(piipe.p[0], 0);
+		waitpid(pid, NULL, 0);
+	}
+	close(piipe.p[0]);
+	close(piipe.p[1]);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_pipexa	piipe;
-	int			pid[argc - 3];
-	int			fd1 = open (argv[1], O_RDONLY, 0666);
-	int			fd2 = open (argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
 	int			i = 2;
 	int			j = 0;
+	int			pid[argc - 3];
+	int			fd1 = open (argv[1], O_RDONLY, 0666);
 
 	piipe.path = NULL;
 	if (argc >= 5)
 	{
-		// pid[j] = fork();
-		// if (pid[j] == -1)
-		// 	return (2);
-		// if (pid[j] == 0)
-		// {
-		// 	if (pipe(piipe.p) )
-		// 	piipe.cmd = ft_split(argv[i], ' ');
-		// 	piipe.path = find_path(piipe.cmd[0], env);
-		// 	dup2(fd1, 0);
-		// 	dup2(piipe.p[1], 1);
-		// 	execve(piipe.path, piipe.cmd, env);
-		// }
-		dup2(fd1, 0);
-		while (argv[i + 2])
+		if (check_here_doc(argv[1]))
 		{
-			pid[j++] = execute_cmd(piipe, argv[i], env, i);
-			i++;
+			for_my_dear_here_doc(argv[2], piipe);
+			i = 3;
 		}
-		pid[j] = fork();
-		if (pid[j] == -1)
-			return 2;
-		dup2(piipe.p[0], 0);
-		if (pid[j] == 0)
-		{
-			piipe.cmd = ft_split(argv[i], ' ');
-			piipe.path = find_path(piipe.cmd[0], env);
-			dup2(fd2, 1);
-			execve(piipe.path, piipe.cmd, env);
-		}
-		// close_n_wait(piipe, pid);
+		else
+			dup2(fd1, 0);
+		while (i < argc - 2)
+			pid[j++] = execute_cmd(piipe, argv[i++], env);
+		pid[j] = out_process(piipe, argv, argc, env);
+		if (pid[j] == 2)
+			exit(0);
+		close_n_wait(piipe, pid);                                                                                                                
 	}
 	else
-		write(2, "please insert at least two commmands\n", 29);
+		write(2, "please insert at least two commands\n", 37);
 }

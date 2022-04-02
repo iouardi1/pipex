@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:01 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/28 23:33:35 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/03/31 17:41:02 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	ft_free(char **arr)
 int	execute_cmd1(t_pipexa piipe, char *argv, char **env)
 {
 	int		pid;
-	int		pid1;
 	int		fd1;
 
 	fd1 = open(argv, O_RDONLY, 0666);
@@ -37,7 +36,6 @@ int	execute_cmd1(t_pipexa piipe, char *argv, char **env)
 		return (2);
 	if (pid == 0)
 	{
-		pid1 = pid;
 		dup2(fd1, 0);
 		dup2(piipe.p[1], 1);
 		close (piipe.p[0]);
@@ -88,7 +86,7 @@ int	main(int argc, char **argv, char **env)
 		piipe.path = find_path (piipe.cmd1[0], env);
 		path_temp = piipe.path;
 		if (pipe(piipe.p) == -1)
-			return (2);
+			write(2, "pipe failed honey\n", 19);
 		pid1 = execute_cmd1(piipe, argv[1], env);
 		free (path_temp);
 		if (pid1 == 2)

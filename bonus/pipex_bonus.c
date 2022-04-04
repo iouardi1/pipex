@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:01 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/02 01:24:25 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/04 00:38:40 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	execute_cmd(t_pipexa piipe, char *argv, char **env)
 	int		pid;
 
 	if (pipe(piipe.p) == -1)
-		write(2, "Pipe Error ", 12);
+		exit (1);
+		// write(2, "Pipe Error ", 12);
 	pid = fork();
 	if (pid == -1)
 		write(2, "Fork Error ", 12);
@@ -28,7 +29,9 @@ int	execute_cmd(t_pipexa piipe, char *argv, char **env)
 		piipe.cmd = ft_split(argv, ' ');
 		piipe.path = find_path(piipe.cmd[0], env);
 		if (!piipe.path || execve(piipe.path, ft_split(argv, ' '), env) == -1)
-			write(2, "command not found\n", 19);
+		{
+			write(2, "command not found===\n", 19);
+		}
 	}
 	else
 	{
@@ -55,7 +58,7 @@ void	check_fd(int fd)
 	if (fd == -1)
 	{
 		write(2, "no such file or directory\n", 27);
-		exit(0);
+		exit(1);
 	}
 }
 
@@ -68,7 +71,7 @@ int	check_here_doc(char *argv)
 	return (0);
 }
 
-int	out_process(t_pipexa piipe, char **argv, int argc, char **env)
+int	last_command(t_pipexa piipe, char **argv, int argc, char **env)
 {
 	int		fd;
 	char	*path_temp;
@@ -81,7 +84,7 @@ int	out_process(t_pipexa piipe, char **argv, int argc, char **env)
 	if (!piipe.path)
 	{
 		write(2, "Command not found\n", 19);
-		return (2);
+		exit (2);
 	}
 	if (check_here_doc(argv[1]))
 		fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
@@ -121,7 +124,7 @@ void	for_my_dear_here_doc(char *argv, t_pipexa piipe)
 	int		len;
 	
 	if (pipe(piipe.p) == -1)
-		write(2, "pipe error honey\n", 18);
+		exit (1);
 	pid = fork();
 	line = NULL;
 	if (pid == -1)
@@ -160,9 +163,9 @@ int	main(int argc, char **argv, char **env)
 			dup2(fd1, 0);
 		while (i < argc - 2)
 			pid[j++] = execute_cmd(piipe, argv[i++], env);
-		pid[j] = out_process(piipe, argv, argc, env);
+		pid[j] = last_command(piipe, argv, argc, env);
 		if (pid[j] == 2)
-			exit(0);
+			exit(1);
 		close_n_wait(piipe, pid);                                                                                                                
 	}
 	else

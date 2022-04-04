@@ -6,7 +6,7 @@
 #    By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/14 16:41:34 by iouardi           #+#    #+#              #
-#    Updated: 2022/04/01 21:34:54 by iouardi          ###   ########.fr        #
+#    Updated: 2022/04/04 00:02:37 by iouardi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ re: fclean all
 bonus: $(OBJ_FILES_BONUS)
 	@make -C mandatory/libft
 	@cp mandatory/libft/libft.a ./
-	$(CC) $(FLAGS) $(OBJ_FILES_BONUS) -o $(NAME) libft.a
+	$(CC) $(FLAGS) $(OBJ_FILES_BONUS) -o $(NAME)_bonus libft.a
 
 .PHONY:
 	all clean fclean re bonus

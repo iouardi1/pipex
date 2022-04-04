@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:01 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/31 17:41:02 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/04 00:11:44 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int	execute_cmd2(t_pipexa piipe, char *argv, char **env)
 		dup2(piipe.p[0], 0);
 		dup2(fd2, 1);
 		close (piipe.p[1]);
-		close (piipe.p[0]);
 		execve(piipe.path, piipe.cmd2, env);
 	}
 	return (pid);
@@ -86,15 +85,15 @@ int	main(int argc, char **argv, char **env)
 		piipe.path = find_path (piipe.cmd1[0], env);
 		path_temp = piipe.path;
 		if (pipe(piipe.p) == -1)
-			write(2, "pipe failed honey\n", 19);
+			exit(1);
 		pid1 = execute_cmd1(piipe, argv[1], env);
 		free (path_temp);
 		if (pid1 == 2)
-			write(2, "pipe failed my dear :(\n", 24);
+			exit(1);
 		piipe.path = find_path (piipe.cmd2[0], env);
 		pid2 = execute_cmd2(piipe, argv[4], env);
 		if (pid2 == 2)
-			write(2, "pipe failed my dear :(\n", 24);
+			exit(1);
 		close_n_wait(piipe, pid1, pid2);
 	}
 	else

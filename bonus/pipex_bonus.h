@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:31 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/01 21:36:01 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/05 23:12:54 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 # include <fcntl.h>
 # include <string.h>
 # include <stdlib.h>
+# include <errno.h>
 # include "get_next_line.h"
+# include "libft/libft.h"
 
 typedef struct s_pipexa
 {

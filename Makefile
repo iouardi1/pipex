@@ -6,11 +6,12 @@
 #    By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/14 16:41:34 by iouardi           #+#    #+#              #
-#    Updated: 2022/04/04 00:02:37 by iouardi          ###   ########.fr        #
+#    Updated: 2022/04/05 14:20:32 by iouardi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME=            pipex
+NAME_BONUS=            pipex_bonus
 TEST_FILE=        Test.c
 FLAGS=            -Wall -Werror -Wextra
 CC=                cc
@@ -37,14 +38,14 @@ clean:
 	find . -name "*.a" -delete
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) outfile
 
 re: fclean all
 
 bonus: $(OBJ_FILES_BONUS)
 	@make -C mandatory/libft
 	@cp mandatory/libft/libft.a ./
-	$(CC) $(FLAGS) $(OBJ_FILES_BONUS) -o $(NAME)_bonus libft.a
+	$(CC) $(FLAGS) $(OBJ_FILES_BONUS) -o $(NAME) libft.a
 
 .PHONY:
 	all clean fclean re bonus

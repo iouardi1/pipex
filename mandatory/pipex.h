@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:31 by iouardi           #+#    #+#             */
-/*   Updated: 2022/03/24 00:47:22 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/05 18:16:31 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <fcntl.h>
 # include <string.h>
 # include <stdlib.h>
+# include <errno.h>
+# include "libft/libft.h"
 
 typedef struct s_pipexa
 {
@@ -31,5 +33,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s1);
 char	*find_path(char *cmd, char **env);
+char	*ft_strchr(const char *str, int c);
+// char	*strerror(int errnum);
 
 #endif

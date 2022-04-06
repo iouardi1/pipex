@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:31 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/05 18:16:31 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/06 23:03:25 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,13 @@ typedef struct s_pipexa
 	int		p[2];
 }	t_pipexa;
 
-char	*ft_strnstr(const char *str1, const char *str2, size_t len);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	**ft_split(char const *s, char c);
-char	*ft_strdup(const char *s1);
 char	*find_path(char *cmd, char **env);
-char	*ft_strchr(const char *str, int c);
-// char	*strerror(int errnum);
+int		execute_cmd2(t_pipexa *piipe, char *argv, char **env);
+int		execute_cmd1(t_pipexa *piipe, char *argv, char **env);
+void	check_path_pro(t_pipexa *piipe);
+void	close_n_wait(t_pipexa *piipe, int pid1, int pid2);
+void	check_path_pro_max(t_pipexa *piipe, char **env, char *cmd);
+void	print_error(char *cmd);
+int		check_path(char *path);
 
 #endif

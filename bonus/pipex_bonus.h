@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:31 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/06 23:26:28 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/10 23:15:35 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,7 @@ typedef struct s_pipexa
 	int		p[2];
 }	t_pipexa;
 
-// char	*ft_strnstr(const char *str1, const char *str2, size_t len);
-// char	*ft_strjoin(char const *s1, char const *s2);
-// char	**ft_split(char const *s, char c);
-// char	*ft_strdup(const char *s1);
 char	*find_path(char *cmd, char **env);
-// int		ft_memcmp(const void *s1, const void *s2, size_t n);
-// char	*ft_substr(char const *s, unsigned int start, size_t len);
-// size_t	ft_strlen(const char *s);
-// int		ft_strncmp(const char *s1, const char *s2, size_t n);
-// char	*get_next_line(int fd);
 int		check_here_doc(char *argv);
 void	type_line_n_check_argv(t_pipexa piipe, char *line, char *argv, int len);
 void	for_my_dear_here_doc(char *argv, t_pipexa piipe);
@@ -52,5 +43,7 @@ void	print_error(char *cmd);
 int		check_path(char *path);
 void	close_n_wait(t_pipexa piipe, int *pid);
 void	if_its_here_doc_or_not(t_pipexa piipe, char **argv, int *i, int fd1);
+void	free_all(char **cmd_temp1);
+void	free_o_ziid_free(t_pipexa piipe);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 23:10:23 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/06 23:11:39 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/10 23:27:53 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	execute_cmd_(t_pipexa piipe, char **env)
 int	execute_cmd(t_pipexa piipe, char *argv, char **env)
 {
 	int		pid;
+	char	**cmd_temp1;
 
 	if (pipe(piipe.p) == -1)
 		exit (1);
@@ -37,6 +38,7 @@ int	execute_cmd(t_pipexa piipe, char *argv, char **env)
 	if (pid == -1)
 		exit (1);
 	piipe.cmd = ft_split(argv, ' ');
+	cmd_temp1 = piipe.cmd;
 	if (!check_path(piipe.cmd[0]) || check_path(piipe.cmd[0]) == 2)
 		piipe.path = ft_strdup(piipe.cmd[0]);
 	else
@@ -45,6 +47,8 @@ int	execute_cmd(t_pipexa piipe, char *argv, char **env)
 		execute_cmd_(piipe, env);
 	else
 	{
+		free(piipe.path);
+		free_all(cmd_temp1);
 		close(piipe.p[1]);
 		dup2(piipe.p[0], 0);
 		close(piipe.p[0]);
@@ -67,8 +71,8 @@ int	last_command(t_pipexa piipe, char **argv, int argc, char **env)
 
 	piipe.cmd = ft_split(argv[argc - 2], ' ');
 	fd = 0;
+	path_temp = piipe.cmd[0];
 	piipe.path = find_path(piipe.cmd[0], env);
-	path_temp = piipe.path;
 	if (!piipe.path)
 	{
 		write(2, "Command not found\n", 19);
@@ -81,10 +85,11 @@ int	last_command(t_pipexa piipe, char **argv, int argc, char **env)
 	check_fd(fd);
 	pid = fork();
 	if (pid == -1)
-		write (2, "fork failed\n", 13);
+		exit (1);
 	if (pid == 0)
-		last_command_(piipe, fd, env, path_temp);
-	return (pid);
+		return (last_command_(piipe, fd, env, piipe.path), pid);
+	else
+		return (free_o_ziid_free(piipe), pid);
 }
 
 void	check_fd1(int fd1, int *i)

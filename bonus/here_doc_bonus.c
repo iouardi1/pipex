@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 23:12:59 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/06 23:14:20 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/10 23:05:42 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	for_my_dear_here_doc(char *argv, t_pipexa piipe)
 	pid = fork();
 	line = NULL;
 	if (pid == -1)
-		write(2, "fork error\n", 12);
+		exit (1);
 	if (pid == 0)
 	{
 		len = ft_strlen(argv);
@@ -69,4 +69,18 @@ void	if_its_here_doc_or_not(t_pipexa piipe, char **argv, int *i, int fd1)
 	}
 	else
 		check_fd1(fd1, i);
+}
+
+void	free_all(char **cmd_temp1)
+{
+	int		i;
+
+	i = 0;
+	while (cmd_temp1[i])
+	{
+		free (cmd_temp1[i]);
+		cmd_temp1[i] = NULL;
+		i++;
+	}
+	free (cmd_temp1);
 }

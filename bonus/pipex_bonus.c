@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:01 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/06 23:29:28 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/10 23:25:51 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ void	check_fd(int fd)
 	}
 }
 
+void	free_o_ziid_free(t_pipexa piipe)
+{
+	free(piipe.path);
+	free_all(piipe.cmd);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_pipexa	piipe;
@@ -54,9 +60,9 @@ int	main(int argc, char **argv, char **env)
 		while (i < argc - 2)
 			pid[j++] = execute_cmd(piipe, argv[i++], env);
 		pid[j] = last_command(piipe, argv, argc, env);
-		if (pid[j] == 2)
-			exit(1);
+		free(piipe.cmd);
 		close_n_wait(piipe, pid);
+		while (1);
 	}
 	else
 		write(2, "please insert at least two commands\n", 37);

@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 23:10:23 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/10 23:27:53 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/11 00:58:24 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	execute_cmd_(t_pipexa piipe, char **env)
 	dup2(piipe.p[1], 1);
 	close(piipe.p[1]);
 	execve(piipe.path, piipe.cmd, env);
+	free_all(piipe.cmd);
 	print_error(piipe.cmd[0]);
 	exit(1);
 }

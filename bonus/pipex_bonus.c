@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 15:58:01 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/10 23:25:51 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/11 01:00:05 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	main(int argc, char **argv, char **env)
 		pid[j] = last_command(piipe, argv, argc, env);
 		free(piipe.cmd);
 		close_n_wait(piipe, pid);
-		while (1);
 	}
 	else
 		write(2, "please insert at least two commands\n", 37);

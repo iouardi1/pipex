@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 00:48:54 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/10 23:05:26 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/11 00:55:50 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ char	*find_path(char *cmd, char **env)
 			return (path[i]);
 		i++;
 	}
+	free_all(path);
 	return (NULL);
 }
 

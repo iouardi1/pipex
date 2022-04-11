@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 23:12:59 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/10 23:05:42 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/11 01:43:00 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,7 @@
 
 int	check_here_doc(char *argv)
 {
-	int		i;
-
-	i = ft_strlen("here_doc");
-	if (!ft_strncmp(argv, "here_doc", i))
+	if (!ft_strncmp(argv, "here_doc", ft_strlen(argv)))
 		return (1);
 	return (0);
 }

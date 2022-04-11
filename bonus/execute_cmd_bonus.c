@@ -6,7 +6,7 @@
 /*   By: iouardi <iouardi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 23:10:23 by iouardi           #+#    #+#             */
-/*   Updated: 2022/04/11 00:58:24 by iouardi          ###   ########.fr       */
+/*   Updated: 2022/04/11 21:34:51 by iouardi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	last_command_(t_pipexa piipe, int fd, char **env, char *path_temp)
 {
 	dup2(fd, 1);
 	execve(piipe.path, piipe.cmd, env);
+	print_error(piipe.cmd[0]);
 	free(path_temp);
 }
 
@@ -73,12 +74,10 @@ int	last_command(t_pipexa piipe, char **argv, int argc, char **env)
 	piipe.cmd = ft_split(argv[argc - 2], ' ');
 	fd = 0;
 	path_temp = piipe.cmd[0];
-	piipe.path = find_path(piipe.cmd[0], env);
-	if (!piipe.path)
-	{
-		write(2, "Command not found\n", 19);
-		exit (2);
-	}
+	if (!check_path(piipe.cmd[0]) || check_path(piipe.cmd[0]) == 2)
+		piipe.path = ft_strdup(piipe.cmd[0]);
+	else
+		piipe.path = find_path (piipe.cmd[0], env);
 	if (check_here_doc(argv[1]))
 		fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
 	else
